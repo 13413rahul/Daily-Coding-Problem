@@ -41,7 +41,7 @@ public class ActivityController {
     public ResponseEntity<List<String>> getAllTopics() {
         List<String> response;
         try {
-            System.out.println("getAllTopics");
+//            System.out.println("getAllTopics");
             response = activityService.getAllTopics();
         }catch (Exception e) {
 
@@ -55,7 +55,7 @@ public class ActivityController {
     public ResponseEntity<String> subscribe(@RequestBody SubscribeRequest subscribeRequest) {
         String response = "";
         try {
-            System.out.println(subscribeRequest);
+//            System.out.println(subscribeRequest);
             response = activityService.subscribe(subscribeRequest);
         }catch (Exception e) {
 
@@ -69,7 +69,7 @@ public class ActivityController {
     public ResponseEntity<String> unsubscribe(@PathVariable("email") String email) {
         String response = "";
         try {
-            System.out.println(email);
+//            System.out.println(email);
             response = activityService.unsubscribe(email);
         }catch (Exception e) {
 

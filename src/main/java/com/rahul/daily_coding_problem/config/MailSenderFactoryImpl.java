@@ -24,7 +24,7 @@ public class MailSenderFactoryImpl {
 
 
     public JavaMailSender getSender() {
-        System.out.println("getSender " + username);
+//        System.out.println("getSender " + username);
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(host);

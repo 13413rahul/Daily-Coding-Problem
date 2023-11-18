@@ -25,7 +25,7 @@ public class updateDatabaseService {
             while ((line = br.readLine()) != null) {
                 Problem problem = getProblem(line);
                 problemRepository.save(problem);
-                System.out.println(problem);
+//                System.out.println(problem);
 
             }
 
@@ -33,7 +33,7 @@ public class updateDatabaseService {
             System.err.println(e.getMessage());
         }
 
-        System.out.println(1);
+//        System.out.println(1);
 
         return "file uploaded SuccessFully";
     }

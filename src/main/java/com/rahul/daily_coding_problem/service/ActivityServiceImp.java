@@ -46,7 +46,7 @@ public class ActivityServiceImp implements ActivityService {
     public String unsubscribe(String email) {
         User user = userRepository.findByEmail(email);
         if(user == null) {
-            System.out.println("no User");
+//            System.out.println("no User");
             return "No Subscribed User of " + email;
         }else {
             deletePreference(user.getId());

@@ -33,7 +33,8 @@ public class SendUtil {
 
     @Scheduled(cron = "${com.scheduled.cron}", zone = "${com.scheduled.zone}")
     public void sendNotificationToAllUser() throws MessagingException, TemplateException, IOException {
-        System.out.println("*********************** sendNotificationToAllUser **************************");
+//        System.out.println("*********************** sendNotificationToAllUser **************************");
+        Map<String, Problem> problemMapping = new HashMap<>();
         List<User> users = getAllUsers();
         for(User user : users) {
             String email = user.getEmail();
@@ -42,35 +43,47 @@ public class SendUtil {
 
             Preference preference = getPreferencesByUserIdAndDays(userId, days + 1);
             List<Problem> problems;
+            String keyMap = "";
             if(preference == null) {
-                System.out.println("null");
+//                System.out.println("null");
                 problems = getAllProblems();
             }else {
-                System.out.println(preference);
+//                System.out.println(preference);
                 String topic = preference.getTopic();
                 Level difficultyLevel = preference.getDifficultyLevel();
+
                 if(difficultyLevel == null) {
                     problems = getAllProblemsByTopic(topic);
                 }else if(topic == null){
                     problems = getAllProblemsByDifficultyLevel(difficultyLevel);
                 }else {
+                    keyMap = topic +"$" + difficultyLevel.toString();
+                    if(problemMapping.containsKey(keyMap)) {
+                        Model model = getModel(email, problemMapping.get(keyMap));
+                        messengerUtil.sendEmail(model);
+                        user.setDays(user.getDays() + 1);
+                        userRepository.save(user);
+                        return;
+                    }
                     problems = getAllProblemsByTopicAndDifficultyLevel(topic, difficultyLevel);
                 }
             }
 
             Problem problem = getRandomProblem(problems);
-            System.out.println(problem);
+            problemMapping.put(keyMap, problem);
+//            System.out.println(problem);
             Model model = getModel(email, problem);
-            System.out.println(model);
+//            System.out.println(model);
             messengerUtil.sendEmail(model);
             user.setDays(user.getDays() + 1);
             userRepository.save(user);
         }
+        problemMapping.clear();
     }
 
     @Scheduled(cron = "@weekly", zone = "${com.scheduled.zone}")
     public void sendReport() throws MessagingException, TemplateException, IOException {
-        System.out.println("sendReport");
+//        System.out.println("sendReport");
         List<User> users = getAllUsers();
         Model model = new Model();
         model.setTo("rahul13413kr@gmail.com");
@@ -85,7 +98,7 @@ public class SendUtil {
     }
 
     private Model getModel(String email, Problem problem) {
-        System.out.println("email " + email + "problem " + problem);
+//        System.out.println("email " + email + "problem " + problem);
         Model model = new Model();
         model.setTo(email);
         model.setSubject("Daily Coding Problem[" + problem.getDifficultyLevel() + "]");
@@ -100,7 +113,7 @@ public class SendUtil {
     }
 
     private Problem getRandomProblem(List<Problem> problems) {
-        System.out.println(problems);
+//        System.out.println(problems);
         Random rand = new Random();
         int index = rand.nextInt(problems.size());
 
@@ -108,17 +121,17 @@ public class SendUtil {
     }
 
     private List<Problem> getAllProblemsByDifficultyLevel(Level difficultyLevel) {
-        System.out.println("difficultyLevel " + difficultyLevel);
+//        System.out.println("difficultyLevel " + difficultyLevel);
         return problemRepository.findAllByDifficultyLevel(difficultyLevel);
     }
 
     private List<Problem> getAllProblemsByTopic(String topic) {
-        System.out.println("topic " + topic);
+//        System.out.println("topic " + topic);
         return problemRepository.findAllByTopic(topic);
     }
 
     private List<Problem> getAllProblemsByTopicAndDifficultyLevel(String topic, Level difficultyLevel) {
-        System.out.println("topic " + topic + "difficultyLevel " + difficultyLevel);
+//        System.out.println("topic " + topic + "difficultyLevel " + difficultyLevel);
         return problemRepository.findAllByTopicAndDifficultyLevel(topic, difficultyLevel);
     }
 
@@ -127,7 +140,7 @@ public class SendUtil {
     }
 
     private Preference getPreferencesByUserIdAndDays(Long userId, Long days) {
-        System.out.println("userId " + userId + "days " + days);
+//        System.out.println("userId " + userId + "days " + days);
         return preferenceRepository.findByUserIdAndDays(userId, days);
     }
 
@@ -136,7 +149,7 @@ public class SendUtil {
     }
 
     private int countNoOfDays(Long userId) {
-        System.out.println("userId " + userId);
+//        System.out.println("userId " + userId);
         return  Math.max(preferenceRepository.countByUserId(userId), 1);
     }
 
