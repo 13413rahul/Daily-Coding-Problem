@@ -63,7 +63,7 @@ public class SendUtil {
                         messengerUtil.sendEmail(model);
                         user.setDays(user.getDays() + 1);
                         userRepository.save(user);
-                        return;
+                        continue;
                     }
                     problems = getAllProblemsByTopicAndDifficultyLevel(topic, difficultyLevel);
                 }
